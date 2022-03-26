@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<meta content="user-scalable=no" name="viewport">
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .tieba_config {
+            position: absolute;
+            left: 500px;
+            top: 10px;
+            opacity: 1;
+        }
+        
+        .qq_config {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            opacity: 1;
+        }
+        
+        .result_container {
+            position: absolute;
+            left: 100px;
+            top: 530px;
+        }
+        
+        .start {
+            position: absolute;
+            left: 200px;
+            top: 450px;
+        }
+        
+        #btn_change {
+            margin-top: 10px;
+            margin-left: 40px;
+        }
+        
+        #list {
+            width: 800px;
+            max-height: 1000px;
+            overflow: auto;
+        }
+        
+        div {
+            font-size: 30px;
+            font-style: normal;
+            font-weight: bold;
+        }
+        
+        button {
+            font-size: 35px;
+            font-style: normal;
+            font-weight: bold;
+        }
+        
+        input {
+            height: 25px;
+            width: 100px;
+            font-size: 25px
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div>
+        <div class="bg bg-blur"></div>
+    </div>
+
+    <div class="tieba_config">
+        贴吧参数设置
+        <form method="POST" action="submit">
+            一次搜索休息时间（s）:<input type="text" name="rest_time" style="margin-left:4px"><br> 
+            出问题重启时间（s）:<input type="text" name="bug_restart_time" style="margin-left:4px"><br> 
+            单次搜索的最大页数：<input type="text" name="max_page" style="margin-left:4px"><br> 
+            搜索轮数: <input type="text" name="round" style="margin-left:4px"><br>
+            搜索开始时间: <input type="text" name="record_time" style="margin-left:4px"><br>
+            每页间隔时间: <input type="text" name="one_page_interval" style="margin-left:4px"><br>
+            <button id="btn">更改贴吧配置</button>
+        </form>
+    </div>
+
+    <div class="qq_config">
+        QQ参数设置
+        <form method="POST">
+            一次搜索休息时间（s）:<input type="text" name="rest_time" style="margin-left:4px"><br> 出问题重启时间（s）:
+            <input type="text" name="bug_restart_time" style="margin-left:4px"><br>
+            <button id="btn2">更改QQ配置</button>
+        </form>
+    </div>
+
+    <div class="start">
+        <button id="btn_start1" onclick="refresh_tieba()">显示贴吧结果</button>
+        <button id="btn_start2">停止运行</button>
+        <button id="btn_start3">重新运行</button>
+    </div>
+
+    <div class="result_container">
+        <ul id="list">
+
+        </ul>
+        <button id="btn_change" onclick="changeToQQ()">切换到QQ结果</button>
+        <button id="btn_change" onclick="refresh_tieba()">切换到贴吧结果</button>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        function getdata(path, datatype) {
+            $.ajax({
+                type: "get",
+                url: path,
+                dataType: "json",
+                success: function(data) {
+                    if (datatype = "tieba") {
+                        loadTiebaData(data);
+                    }
+
+                }
+            });
+        }
+
+        function copyUrl2(self) {
+            //alert(self.parentNode.firstElementChild.innerHTML);
+            var temp = self.parentNode.firstElementChild.innerHTML + "";
+            var text = temp.replace(/<br>/g, "\n");
+            text = text.replace(/<[^>]+>/g, "");
+            var input = document.createElement('textarea');
+            document.body.appendChild(input);
+            input.innerHTML = text;
+            input.setAttribute('value', text);
+            //input.setAttribute('disabled','disabled');
+            input.select();
+            document.execCommand('copy');
+            //alert("复制成功");
+            document.body.removeChild(input);
+        }
+
+        function refresh_tieba() {
+            getdata("/mes/refresh", "tieba");
+        }
+
+        function save(self) {
+            var temp = self.parentNode.firstElementChild.innerHTML + "";
+            var flag = temp.indexOf("https://tieba.baidu.com/");
+            var r = temp.split(/[^\d]+/);
+            pos = parseInt(r[1]);
+            if (flag != -1) {
+                $.ajax({
+                    type: "POST",
+                    url: "/mes/save_last_pos/" + pos,
+                    success: function(res) {
+
+                    }
+                });
+            } else {
+
+            }
+
+        }
+
+        function changeToQQ() {
+            var btn = document.getElementById('btn_change');
+            loadQQData("0");
+        }
+
+        function loadQQData(data) {
+            var result = document.getElementById('list');
+            result.innerHTML = "";
+            var len = data[1].size();
+            for (var i = 0; i < 10; i++) {
+                var list = document.getElementById('list');
+                // 按钮添加点击事件，把输入框的内容显示到留言列表
+                var li = document.createElement('li');
+                li.setAttribute('style', 'font-size:30px;');
+
+                var div = document.createElement('div');
+
+
+                var text = document.createElement('div');
+                text.setAttribute('ReadOnly', 'True'); //设置文本为只读类型
+                text.innerHTML = '【2190】29620120' + '<br>' +
+                    '[\'2190\', \'10000\', \'二少\', \'狐金\', \'叽盒\']' + '<br>' +
+                    '中介5R大苹果\\/AH5670【双梦二少8K5】双非\\/资历10W\\/狐金考金猪金资历红十红八红资历金\\/六限黄年轮黑枕戈明镜高悬中宵渊霜下架白夜斩黑夜斩\\/小白龙衣\\/叽盒猪盒白端午四七盒二代重阳二代七夕黑楼兰\\/复刻白夜斩\\/情R枕小资历披风13披风\\/惜往日\\/金眼镜\\/尽锋芒\\/曲云伞夜话黑龙';
+                var btn_copy = document.createElement('button');
+                btn_copy.setAttribute('onClick', 'copyUrl2(this)');
+                btn_copy.innerHTML = '复制';
+                var btn_save = document.createElement('button');
+                btn_save.setAttribute('onClick', 'save(this)');
+                btn_save.setAttribute('style', 'margin-left:20px');
+                btn_save.innerHTML = '保存';
+
+                div.appendChild(text);
+                div.appendChild(btn_copy);
+                div.appendChild(btn_save);
+                li.appendChild(div);
+
+                list.appendChild(li);
+            }
+        }
+
+        function loadTiebaData(result_list) {
+            var result = document.getElementById('list');
+            result.innerHTML = "";
+            var len = result_list[0];
+            for (var i = 0; i < len; i++) {
+                var list = document.getElementById('list');
+                // 按钮添加点击事件，把输入框的内容显示到留言列表
+                var li = document.createElement('li');
+                li.setAttribute('style', 'font-size:30px;');
+
+                var div = document.createElement('div');
+
+
+                var text = document.createElement('div');
+                text.setAttribute('ReadOnly', 'True'); //设置文本为只读类型
+                text.innerHTML = "序号：" + result_list[1][i] + '<br>' + result_list[2][i] + '<a href = ' + result_list[3][i] + ">" + result_list[3][i] + '</a>' + '<br>' +
+                    result_list[4][i] + '<br>' +
+                    result_list[5][i];
+                var btn_copy = document.createElement('button');
+                btn_copy.setAttribute('onClick', 'copyUrl2(this)');
+                btn_copy.innerHTML = '复制';
+                var btn_save = document.createElement('button');
+                btn_save.setAttribute('onClick', 'save(this)');
+                btn_save.setAttribute('style', 'margin-left:20px');
+                btn_save.innerHTML = '保存';
+
+                div.appendChild(text);
+                div.appendChild(btn_copy);
+                div.appendChild(btn_save);
+                li.appendChild(div);
+                list.appendChild(li);
+                list.scrollIntoView();
+            }
+        }
+        window.onload = function() {
+            // 获取元素(列表，输入框，发送)
+            //loadTiebaData();
+            //getdata("/mes/refresh", "tieba")
+        }
+    </script>
+</body>
+
+</html>

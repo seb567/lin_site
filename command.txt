@@ -1,0 +1,6 @@
+uwsgi --ini uwsgi.ini --plugins=python3
+sudo cp my_nginx.conf /etc/nginx/conf.d/
+sudo /etc/init.d/nginx restart
+
+
+1.服务器的时间默认的是0时区，需要将是将时间改为东八区

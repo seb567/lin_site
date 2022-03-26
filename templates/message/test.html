@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#btn_start1").click(function(){
+    $.get("/mes/start_tieba",function(data,status){
+      alert("数据：" + data + "\n状态：" + status);
+    });
+  });
+});
+</script>
+</head>
+<body>
+
+  <button id="btn_start1">开始运行</button>
+</body>
+</html>
