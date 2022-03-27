@@ -24,8 +24,36 @@ def start():
 
 def index(request):
     
-    return render(request,'message/test.html')
-start()
+    return render(request,'message/login.html')
+#start()
+
+def getConfig(request):
+    return render(request, 'message/param_config.html')
+def usermanger(reqeust):
+    return render(request, 'message/user_manger.html')
+
+def login(request):
+    userId = request.POST.get('u','')
+    password = request.POST.get('p','')
+    userinfo = models.userInfo.objects. \
+                filter(userid=userId, password=password). \
+                values('userid', 'usertype').first()
+    if not userinfo:
+        return HttpResponse("用户名或密码错误，请重新输入")
+    else:
+        print(userinfo)
+        request.session['userid'] = userinfo['userid']
+        request.session.set_expiry(60 * 60 * 24)
+        usertype = userinfo['usertype']
+        if usertype == 0:
+            return render(request, 'message/user_main.html')
+        elif usertype == 1:
+            return render(request, 'message/main.html')
+        else :
+            return HttpResponse("未知的用户")
+
+
+
 
 def main(request):
     context = {}

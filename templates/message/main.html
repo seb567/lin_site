@@ -9,14 +9,14 @@
         .tieba_config {
             position: absolute;
             left: 500px;
-            top: 10px;
+            top: 50px;
             opacity: 1;
         }
         
         .qq_config {
             position: absolute;
             left: 10px;
-            top: 10px;
+            top: 50px;
             opacity: 1;
         }
         
@@ -70,27 +70,10 @@
         <div class="bg bg-blur"></div>
     </div>
 
-    <div class="tieba_config">
-        贴吧参数设置
-        <form method="POST" action="submit">
-            一次搜索休息时间（s）:<input type="text" name="rest_time" style="margin-left:4px"><br> 
-            出问题重启时间（s）:<input type="text" name="bug_restart_time" style="margin-left:4px"><br> 
-            单次搜索的最大页数：<input type="text" name="max_page" style="margin-left:4px"><br> 
-            搜索轮数: <input type="text" name="round" style="margin-left:4px"><br>
-            搜索开始时间: <input type="text" name="record_time" style="margin-left:4px"><br>
-            每页间隔时间: <input type="text" name="one_page_interval" style="margin-left:4px"><br>
-            <button id="btn">更改贴吧配置</button>
-        </form>
-    </div>
-
-    <div class="qq_config">
-        QQ参数设置
-        <form method="POST">
-            一次搜索休息时间（s）:<input type="text" name="rest_time" style="margin-left:4px"><br> 出问题重启时间（s）:
-            <input type="text" name="bug_restart_time" style="margin-left:4px"><br>
-            <button id="btn2">更改QQ配置</button>
-        </form>
-    </div>
+    <nav>
+        <a href="{% url 'gotoconfig' %}">参数设置</a>
+        <a href="{% url 'gotoconfig' %}">人员管理</a>
+    </nav>
 
     <div class="start">
         <button id="btn_start1" onclick="refresh_tieba()">显示贴吧结果</button>
